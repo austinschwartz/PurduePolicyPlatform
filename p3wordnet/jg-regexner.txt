@@ -1,0 +1,4 @@
+Bachelor of (Arts|Laws|Science|Engineering)	DEGREE
+Lalor	 LOCATION	PERSON
+Labor	 ORGANIZATION
+R&D 	 KEYWORD
