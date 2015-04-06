@@ -1,23 +1,25 @@
 JCC = javac
 
 # libraries
-#LIB = .:json-simple-1.1.jar:jsoup-1.7.3.jar:pdfbox-app-1.8.6.jar:commons-codec-1.9.jar:mongo-java-driver-2.12.2.jar
-LIB = .:*.jar #include all jar
+SOURCE = ../src/
+OUT = .
+LIB = ..:$(OUT):$(JARS)
+JARS = $(shell echo $(wildcard ../lib/*) | tr " " ":")
+
 # pattern rule
 .SUFFIXES: .java .class
 
 .java.class:
-	$(JCC) -cp $(LIB) $<
+	$(JCC) -sourcepath $(SOURCE) -classpath $(LIB) -d $(OUT) $<
 
 
 # sources
 CLASSES = \
-	SolrConnector.java \
-	HtmlParser.java \
-	Bing.java \
-	KeywordReader.java \
-	FileTypeFilter.java \
-	GUI.java
+	../src/HtmlParser.java \
+	../src/Bing.java \
+	../src/KeywordReader.java \
+	../src/FileTypeFilter.java \
+	../src/GUI.java 
 
 
 default: classes
@@ -25,8 +27,8 @@ default: classes
 classes: $(CLASSES:.java=.class)
 
 clean:
-	$(RM) *.class
+	$(RM) ../bin/*.class
 
 run:
-	java -cp $(LIB) Main
+	java -cp $(JARS):. GUI
 	
