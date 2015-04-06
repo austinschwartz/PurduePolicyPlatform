@@ -102,13 +102,13 @@ public class GUI  extends JPanel implements ActionListener{
 				file = fileChooser.getSelectedFile();
 				filename = file.getName();
 
-				if(file.getName().endsWith(".csv")){
+				if(file.getName().endsWith(".csv")) {
 					keywords = KeywordReader.readCsv(file);
 				}
                 else if (file.getName().endsWith(".txt")) {
                     keywords = KeywordReader.readTxt(file);
                 }
-				else{
+				else {
 					keywords = KeywordReader.readPdf(file);
 				}
 
@@ -116,28 +116,33 @@ public class GUI  extends JPanel implements ActionListener{
 
 				//NOTE: keyword csv format?
 				//List> wordList = new ArrayList<ArrayList>();
-				for(String s : keywords){
+				for (String s : keywords) {
 					invokeProcedures(s);
 				}
 
 			}
-			else{
+			else {
 				console.append("Input File Selection cancelled" + NEWLINE);
 			}
 		}
 	}
 
 	/**
-	 * main method creats GUI
+	 * main method creates GUI
 	 **/
 	public static void main(String[] args){
-		//creating GUI
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+        if (args.length == 0) {
+        //creating GUI
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
             }
         });
-	}
+    } else {
+        GUI gui = new GUI();
+        gui.invokeProcedures(args[0]);
+    }
+}
 
 	/**
 	 * The entire data processing procedure for a single keyword
@@ -147,10 +152,10 @@ public class GUI  extends JPanel implements ActionListener{
 	public void invokeProcedures(String keyword){
 		//STEP 0: check mongoDB connection
 		DB db = null;
-		try{
+		try {
 			System.out.print("Connecting to the database ...\n");
 			MongoClient mongoClient = new MongoClient( DB_HOST , DB_PORT );	//connect to given DB using given port //throws UnknownHostException
-			db = mongoClient.getDB( DB_NAME );							//use given database
+			db = mongoClient.getDB( DB_NAME );//use given database
 		}
 		catch(UnknownHostException e){
 			System.out.print("Cannot connect to MongoDB\n");
@@ -182,9 +187,12 @@ public class GUI  extends JPanel implements ActionListener{
 				sb.append(c);
 			}
 		}
-		System.out.println(sb.toString());
 
-		DBCollection collection = db.getCollection(sb.toString()); //use keyword (without space) as collection name; create such collection if not exist
+        String query = sb.toString();
+		System.out.println(query);
+        if (query.length() > 60)
+            query = query.substring(0, 60);
+		DBCollection collection = db.getCollection(query); //use keyword (without space) as collection name; create such collection if not exist
 
 
 
@@ -199,7 +207,7 @@ public class GUI  extends JPanel implements ActionListener{
 				}
 			}
 
-			PrintWriter out = new PrintWriter(OUTPUT_DIR + "/"+sb.toString() + ".txt");
+			PrintWriter out = new PrintWriter(OUTPUT_DIR + "/" + query + ".txt");
 
 			for(String url : urls){
 				//STEP 3: extract data

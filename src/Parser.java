@@ -2,7 +2,7 @@
 /**
  * Parser will use NLP toolkit to parse a natural language question
  * and extract key words
- * 
+ *
  * @author huanyi_guo
  *
  */
@@ -19,22 +19,22 @@ public class Parser {
 		ParserModel model = null;
 		System.out.println("Loading model ...");
 		try {
-			modelIn = new FileInputStream("nlp_model/en-parser-chunking.bin");
+			modelIn = new FileInputStream("../nlp_model/en-parser-chunking.bin");
 			model = new ParserModel(modelIn);
 			opennlp.tools.parser.Parser parser = ParserFactory.create(model);
-			
+
 			//get the sentence and count number of words
-			BufferedReader br = new BufferedReader(new FileReader("input/questions.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("../input/questions.txt"));
 		    //StringBuilder sbuilder = new StringBuilder();
 		    String line = br.readLine();
-		    
+
 		    while (line != null) {
 		    	//sbuilder.append(line);//
 		    	System.out.print("\nRead Sentence: ");
 		    	System.out.println(line);
 		    	System.out.println("\nParsing sentence ...");
 		    	int numberOfWords = line.split(" ").length;
-		    	
+
 		    	Parse topParses[] = ParserTool.parseLine(line, parser, 1);
 		    	StringBuffer sb = new StringBuffer();
 		    	topParses[0].show(sb);
@@ -49,7 +49,7 @@ public class Parser {
 						nns[nCount] = new StringBuilder();
 						while( (c = sb.charAt(i++)) != ')'){
 							nns[nCount].append(c);
-							
+
 						}
 						nCount++;
 					}
@@ -68,23 +68,23 @@ public class Parser {
 				for(int i = 0; i<nCount; i++){
 					System.out.println(nns[i].toString());
 				}
-				
+
 				//read another line
 				line = br.readLine();
 		    }//end of reading file
 		    //String everything = sbuilder.toString();
 		    br.close();
-		    
+
 			//String testcase = "What are the challenges in applying more systematic approaches to characterizing and communicating uncertainty in the assessment of a drug's benefits and risks.";
 			//
 			//parse the string
-			
-			
-			
-			
+
+
+
+
 			//System.out.println(sb.toString());
-			
-			
+
+
 
 			modelIn.close();
 			System.out.println("\nDone");
@@ -102,8 +102,8 @@ public class Parser {
 			    }
 			}
 		}
-		
+
 		return;
 	}
-	
+
 }

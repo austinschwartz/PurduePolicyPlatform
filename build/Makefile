@@ -19,6 +19,7 @@ CLASSES = \
 	../src/Bing.java \
 	../src/KeywordReader.java \
 	../src/FileTypeFilter.java \
+	../src/Parser.java \
 	../src/GUI.java 
 
 

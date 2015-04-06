@@ -18,18 +18,18 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-//import java.util.ArrayList;
+import java.util.*;
 
 /**
  *
  * @author pumpkin
  */
 public class Bing {
-    
+
     /**
-     * 
+     *
      * @param query - query to use for the search
-     * @return - a json array of results. each contains a title, description, url, 
+     * @return - a json array of results. each contains a title, description, url,
      * and some other metadata that can be easily extracted since its in json format
      */
     public static JSONArray search(String query){
@@ -52,25 +52,25 @@ public class Bing {
             URL url = new URL(webPage);
             URLConnection urlConnection = url.openConnection();
             urlConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
-            
+
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             String inputLine;
             StringBuilder response = new StringBuilder();
-            
+
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine).append("\n");
             }
-            
+
             in.close();
             JSONParser parser = new JSONParser();
             JSONArray arr = (JSONArray)((JSONObject)((JSONObject)parser.parse(response.toString())).get("d")).get("results");
             JSONObject obj = (JSONObject)arr.get(0);
             JSONArray out = (JSONArray)obj.get("Web");
-            
+
             return out;
-            
-//            
-            
+
+//
+
         } catch (MalformedURLException ex) {
             Logger.getLogger(Bing.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -80,11 +80,11 @@ public class Bing {
         }
         return null;
     }
-    
+
     /**
      * This main is for testing only.
      **/
-    
+
     /*
     public static void main (String[] args){
         //read keywords
@@ -107,5 +107,5 @@ public class Bing {
         }
     }
     */
-    
+
 }
