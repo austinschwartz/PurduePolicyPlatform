@@ -19,32 +19,32 @@ import org.json.simple.JSONObject;
 
 /**
  * The entry point of the entire application (Testing only)
- *  
+ *
  * @author huanyi_guo
  */
 
 
 @SuppressWarnings("serial")
 public class GUI  extends JPanel implements ActionListener{
-	
+
 	private static final String TITLE = "Demo"; //title bar text
 	private static final String NEWLINE = "\n";	//new line char in unix-like os
-	
+
 	//constant: for testing only
 	private static final String DB_HOST = "localhost";			//only run mongoDB on local host
 	private static final int DB_PORT = 27017;					//use default port
 	private static final String DB_NAME = "test";				//use default database
-	
+
 	private static final String FULLTEXT_INDEX = "fullText";	//index in mongoDB
 	private static final String URL_INDEX = "URL";				//index in mongoDB
 	private static final String OUTPUT_DIR = "output";
-	
+
 	//tagging
 	private static final String SAMPLE_TAG_INDEX = "TOPIC";		//sample tag index
 	private static final String SAMPLE_TAG = "pharmaceutical";	//sample tag
-	
-	//private static final String SEPARATOR = "|";				//character used in the CSV file 
-	
+
+	//private static final String SEPARATOR = "|";				//character used in the CSV file
+
 	//menu
 	JMenuBar menuBar;
 	JMenu menu;
@@ -55,7 +55,7 @@ public class GUI  extends JPanel implements ActionListener{
 	JTextArea console;
 
 	/*
-	 * Constructor 
+	 * Constructor
 	 */
 	public GUI(){
 		//create text area
@@ -64,9 +64,10 @@ public class GUI  extends JPanel implements ActionListener{
 		JScrollPane consoleScrollPane = new JScrollPane(console);
 		//create file chooser
 		fileChooser = new JFileChooser();
-		fileChooser.addChoosableFileFilter(new FileTypeFilter(".pdf", "PDF Documents"));	//pdf support 
+		fileChooser.addChoosableFileFilter(new FileTypeFilter(".pdf", "PDF Documents"));	//pdf support
 		fileChooser.addChoosableFileFilter(new FileTypeFilter(".csv", "Comma-Separated Values Documents")); //csv support
-		//create menu
+		fileChooser.addChoosableFileFilter(new FileTypeFilter(".txt", "Text files")); //txt support
+        //create menu
 		menuBar = new JMenuBar();
 		menu = new JMenu("Menu");
 		menuBar.add(menu);
@@ -88,7 +89,7 @@ public class GUI  extends JPanel implements ActionListener{
         frame.pack();
         frame.setVisible(true);
     }
-	
+
 	public void actionPerformed(ActionEvent e){
 		int ret;
 		File file;
@@ -100,16 +101,19 @@ public class GUI  extends JPanel implements ActionListener{
 			if(ret == JFileChooser.APPROVE_OPTION){
 				file = fileChooser.getSelectedFile();
 				filename = file.getName();
-				
+
 				if(file.getName().endsWith(".csv")){
 					keywords = KeywordReader.readCsv(file);
 				}
+                else if (file.getName().endsWith(".txt")) {
+                    keywords = KeywordReader.readTxt(file);
+                }
 				else{
 					keywords = KeywordReader.readPdf(file);
 				}
 
 				console.append("Input File Selected: " +  filename + NEWLINE);
-				
+
 				//NOTE: keyword csv format?
 				//List> wordList = new ArrayList<ArrayList>();
 				for(String s : keywords){
@@ -122,7 +126,7 @@ public class GUI  extends JPanel implements ActionListener{
 			}
 		}
 	}
-	
+
 	/**
 	 * main method creats GUI
 	 **/
@@ -137,7 +141,7 @@ public class GUI  extends JPanel implements ActionListener{
 
 	/**
 	 * The entire data processing procedure for a single keyword
-	 * 
+	 *
 	 * @param keyword - keyword is a list of keywords, with AND or OR operator already inserted
 	 */
 	public void invokeProcedures(String keyword){
@@ -152,7 +156,7 @@ public class GUI  extends JPanel implements ActionListener{
 			System.out.print("Cannot connect to MongoDB\n");
 			return;
 		}
-		
+
 		//STEP 1: call Bing search
 		System.out.print("Searching the Internet ...\n");
 		JSONArray results = Bing.search(keyword);
@@ -163,7 +167,7 @@ public class GUI  extends JPanel implements ActionListener{
 		}
 		System.out.print(results.size());
 		System.out.print(" URLs returned\n");
-  
+
 		//System.out.print("Connecting to the database ...\n");
 		//MongoClient mongoClient = new MongoClient( DB_HOST , DB_PORT );	//connect to given DB using given port //throws UnknownHostException
 		//DB db = mongoClient.getDB( DB_NAME );							//use given database
@@ -179,11 +183,11 @@ public class GUI  extends JPanel implements ActionListener{
 			}
 		}
 		System.out.println(sb.toString());
-		
+
 		DBCollection collection = db.getCollection(sb.toString()); //use keyword (without space) as collection name; create such collection if not exist
-		
-		
-		
+
+
+
 		try {
 			File dir = new File(OUTPUT_DIR);
 			if (!dir.exists()) {
@@ -192,19 +196,19 @@ public class GUI  extends JPanel implements ActionListener{
 				        //result = true;
 				} catch(SecurityException se){
 				        //handle it
-				} 
+				}
 			}
-			
+
 			PrintWriter out = new PrintWriter(OUTPUT_DIR + "/"+sb.toString() + ".txt");
-		
+
 			for(String url : urls){
 				//STEP 3: extract data
 				System.out.print("Extracting full text from ");
 				System.out.print(url);
 				System.out.print(" ...\n");
-			
+
 				String fulltext = null;
-				try{//attempt to get full text 
+				try{//attempt to get full text
 					fulltext = HtmlParser.getFullText(url);
 				}
 				catch(IOException e){//cannot get full text
@@ -213,9 +217,9 @@ public class GUI  extends JPanel implements ActionListener{
 					System.out.println("...Skip");
 					continue;
 				}
-			
+
 				//STEP 4: NLP
-				
+
 				//STEP 5: insert data to mongoDB
 				System.out.print("Inserting data to database ... ");
 				//tagging
@@ -225,7 +229,7 @@ public class GUI  extends JPanel implements ActionListener{
 				}
 				collection.insert(dbObj);
 				System.out.print("done\n");
-			
+
 				//Extra: Output the url in a file
 				out.println(url);
 			}
@@ -234,6 +238,6 @@ public class GUI  extends JPanel implements ActionListener{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 	}
 }
