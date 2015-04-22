@@ -19,19 +19,18 @@ db.getCollection('How_can_the_FDA_effectively_regulate_personal_medicine_compare
 
   * look at the docs for find and findAll on the mongodb site - http://docs.mongodb.org/manual/reference/method/db.collection.find/
   * In the database, a document is stored as follows:
->     db.getCollection('How_can_the_FDA_effectively_regulate_personal_medicine_compared_to_“we”_medicine').findOne()
->
-> {
->
->     "_id" : ObjectId("553695d0d4c6c263287ea77a"),
->
->     "fullText" : "all the text from the page",
->
->     "URL" : "http://www.fda.gov/AboutFDA/Transparency/Basics/ucm269834.htm",
->
->     "TOPIC" : "pharmaceutical"
->
-> }
+     db.getCollection('How_can_the_FDA_effectively_regulate_personal_medicine_compared_to_“we”_medicine').findOne()
+{
+
+    "_id" : ObjectId("553695d0d4c6c263287ea77a"),
+
+     "fullText" : "all the text from the page",
+
+     "URL" : "http://www.fda.gov/AboutFDA/Transparency/Basics/ucm269834.htm",
+
+     "TOPIC" : "pharmaceutical"
+
+ }
 
 
 To run this application, you must have a copy of MongoDB running on localhost. Instruction on how to install and run MongoDB can be retrieved from http://docs.mongodb.org/manual/installation/
