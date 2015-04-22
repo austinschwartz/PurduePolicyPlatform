@@ -13,7 +13,7 @@ Before starting, make sure mongodb is running. You can check if its running by r
   * Open up the database by running the mongo command
   * Select our test database with "use test"
   * Each collection is a list of results from one of our queries. The name of the collection is the question asked. To get a list of collections, type "show collections"
-  * To query a collection, use the following:
+5. To query a collection, use the following:
      * db.getCollection('How_can_the_FDA_effectively_regulate_personal_medicine_compared_to_“we”_medicine').find()
   * look at the docs for find and findAll on the mongodb site - http://docs.mongodb.org/manual/reference/method/db.collection.find/
   * In the database, a document is stored as follows:
