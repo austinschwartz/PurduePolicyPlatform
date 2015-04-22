@@ -14,15 +14,23 @@ Before starting, make sure mongodb is running. You can check if its running by r
   * Select our test database with "use test"
   * Each collection is a list of results from one of our queries. The name of the collection is the question asked. To get a list of collections, type "show collections"
 5. To query a collection, use the following:
-     * db.getCollection('How_can_the_FDA_effectively_regulate_personal_medicine_compared_to_“we”_medicine').find()
+
+db.getCollection('How_can_the_FDA_effectively_regulate_personal_medicine_compared_to_“we”_medicine').find()
+
   * look at the docs for find and findAll on the mongodb site - http://docs.mongodb.org/manual/reference/method/db.collection.find/
   * In the database, a document is stored as follows:
 >     db.getCollection('How_can_the_FDA_effectively_regulate_personal_medicine_compared_to_“we”_medicine').findOne()
+>
 > {
+>
 >     "_id" : ObjectId("553695d0d4c6c263287ea77a"),
+>
 >     "fullText" : "all the text from the page",
+>
 >     "URL" : "http://www.fda.gov/AboutFDA/Transparency/Basics/ucm269834.htm",
+>
 >     "TOPIC" : "pharmaceutical"
+>
 > }
 
 
