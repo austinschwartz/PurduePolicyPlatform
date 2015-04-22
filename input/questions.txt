@@ -1,8 +1,2 @@
-What are the challenges in applying more systematic approaches to characterizing and communicating uncertainty in the assessment of a drug's benefits and risks.
-What are the potential systematic approaches to address uncertainty faced by regulators in the assessment of benefits and risks in pharmaceuticals, drawing from various scientific and regulatory disciplines and domains.
-What are the possible principles, best practices, and resources that can facilitate the development, evaluation, and incorporation of such approaches in regulatory decision-making.
-Explore principles and approaches to facilitate the communication about uncertainty in the assessment of benefits and risks with FDA stakeholders.
-Provide an overview of regulatory strategies for communicating benefits and risks of pharmaceutical products and clarify the drug regulator's role in communicating uncertainty
-FDA's patient-focused drug development initiative and the different ways in which FDA receives information from different stakeholders and incorporates this information into addressing the relevant uncertainties in the assessment of benefits and risks.
-How can the patient voice inform how much uncertainty can be tolerated?
-How do we communicate information about what is known and unknown about benefits and risks as that information changes?
+How is the FDA going to ensure a continuous movement towards reducing and eventually eliminating misdiagnosis
+How can the FDA help provide consumers with the best up to date information available on personalized medicine

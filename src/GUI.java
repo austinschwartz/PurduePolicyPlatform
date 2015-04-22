@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -6,6 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.ConcurrentMap;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -16,6 +17,7 @@ import java.net.UnknownHostException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 
 /**
  * The entry point of the entire application (Testing only)
@@ -90,7 +92,7 @@ public class GUI  extends JPanel implements ActionListener{
         frame.setVisible(true);
     }
 
-	public void actionPerformed(ActionEvent e){
+	public void actionPerformed(ActionEvent e) {
 		int ret;
 		File file;
 		String filename;
@@ -117,7 +119,9 @@ public class GUI  extends JPanel implements ActionListener{
 				//NOTE: keyword csv format?
 				//List> wordList = new ArrayList<ArrayList>();
 				for (String s : keywords) {
-					invokeProcedures(s);
+					try {
+						invokeProcedures(s);
+					} catch (Exception t) {}
 				}
 
 			}
@@ -130,7 +134,7 @@ public class GUI  extends JPanel implements ActionListener{
 	/**
 	 * main method creates GUI
 	 **/
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException {
         if (args.length == 0) {
         //creating GUI
             javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -149,7 +153,9 @@ public class GUI  extends JPanel implements ActionListener{
 	 *
 	 * @param keyword - keyword is a list of keywords, with AND or OR operator already inserted
 	 */
-	public void invokeProcedures(String keyword){
+	public void invokeProcedures(String keyword) throws IOException{
+		//Parser parser = new Parser();
+		
 		//STEP 0: check mongoDB connection
 		DB db = null;
 		try {
@@ -161,7 +167,16 @@ public class GUI  extends JPanel implements ActionListener{
 			System.out.print("Cannot connect to MongoDB\n");
 			return;
 		}
-
+		
+		
+		
+		//Step 0a: turn into concepts
+		
+		//System.out.println(keyword);
+		//String[] concepts = parser.getConcepts(keyword);
+		//System.out.println("concepts: " + Arrays.toString(concepts));
+		
+		
 		//STEP 1: call Bing search
 		System.out.print("Searching the Internet ...\n");
 		JSONArray results = Bing.search(keyword);
@@ -175,7 +190,7 @@ public class GUI  extends JPanel implements ActionListener{
 
 		//System.out.print("Connecting to the database ...\n");
 		//MongoClient mongoClient = new MongoClient( DB_HOST , DB_PORT );	//connect to given DB using given port //throws UnknownHostException
-		//DB db = mongoClient.getDB( DB_NAME );							//use given database
+//		DB db = mongoClient.getDB( DB_NAME );							//use given database
 		String entry = keyword.replaceAll("\\s+","_");
 		StringBuilder sb = new StringBuilder();
 		for(int i=0; i<entry.length(); i++ ){
@@ -190,8 +205,8 @@ public class GUI  extends JPanel implements ActionListener{
 
         String query = sb.toString();
 		System.out.println(query);
-        if (query.length() > 60)
-            query = query.substring(0, 60);
+        if (query.length() > 123)
+            query = query.substring(0, 123);
 		DBCollection collection = db.getCollection(query); //use keyword (without space) as collection name; create such collection if not exist
 
 
@@ -228,6 +243,12 @@ public class GUI  extends JPanel implements ActionListener{
 
 				//STEP 4: NLP
 
+				// Insert into Lucene
+//				System.out.print("Inserting into Lucene ... ");
+//				Document doc = new Document();
+//				doc.add(new TextField(url, fulltext, Field.Store.YES));
+//				iwriter.addDocument(doc);
+
 				//STEP 5: insert data to mongoDB
 				System.out.print("Inserting data to database ... ");
 				//tagging
@@ -241,6 +262,25 @@ public class GUI  extends JPanel implements ActionListener{
 				//Extra: Output the url in a file
 				out.println(url);
 			}
+//			try {
+////			    DirectoryReader ireader = DirectoryReader.open(directory);
+////			    IndexSearcher isearcher = new IndexSearcher(ireader);
+////			    // Parse a simple query that searches for "text":
+////			    QueryParser queryParser = new QueryParser("fieldname", analyser);
+////			    Query qQuery = queryParser.parse("text");
+////			    ScoreDoc[] hits = isearcher.search(qQuery, null, 1000).scoreDocs;
+////	
+////			    // Iterate through the results:
+////			    for (int i = 0; i < hits.length; i++) {
+////			      Document hitDoc = isearcher.doc(hits[i].doc);
+////			      System.out.println(hitDoc.get("fieldname"));
+////			    }
+////				iwriter.close();
+////			    ireader.close();
+////			    directory.close();
+//			} catch (Exception y) {}
+			
+			
 			out.close();
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
